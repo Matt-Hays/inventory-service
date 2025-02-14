@@ -11,7 +11,7 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
-	<groupId>csi5347</groupId>
+	<groupId>com.courseproject</groupId>
 	<artifactId>inventory-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>inventory-service</name>

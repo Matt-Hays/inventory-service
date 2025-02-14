@@ -1,4 +1,4 @@
-package csi5347.inventory_service.controller;
+package com.courseproject.inventoryservice.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;

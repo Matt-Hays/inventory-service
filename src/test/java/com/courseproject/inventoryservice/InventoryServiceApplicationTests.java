@@ -1,4 +1,4 @@
-package csi5347.inventory_service;
+package com.courseproject.inventoryservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

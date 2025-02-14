@@ -1,4 +1,4 @@
-package csi5347.inventory_service;
+package com.courseproject.inventoryservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -14,7 +14,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = "purchaseOrderLineItems")
 public class PurchaseOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

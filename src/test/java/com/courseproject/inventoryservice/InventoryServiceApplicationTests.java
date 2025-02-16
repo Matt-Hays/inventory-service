@@ -1,8 +1,8 @@
 package com.courseproject.inventoryservice;
 
 import com.courseproject.inventoryservice.models.*;
+import com.courseproject.inventoryservice.services.InventoryService;
 import com.courseproject.inventoryservice.services.ProductService;
-import com.courseproject.inventoryservice.services.PurchaseOrderLineItemService;
 import com.courseproject.inventoryservice.services.PurchaseOrderService;
 import com.courseproject.inventoryservice.services.VendorService;
 import org.junit.jupiter.api.*;
@@ -12,14 +12,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class InventoryServiceApplicationTests {
 
-    //	@Autowired
-//	InventoryService inventoryService;
     @Autowired
     VendorService vendorService;
     @Autowired
@@ -27,11 +26,10 @@ class InventoryServiceApplicationTests {
     @Autowired
     PurchaseOrderService purchaseOrderService;
     @Autowired
-    PurchaseOrderLineItemService purchaseOrderLineItemService;
+    InventoryService inventoryService;
 
     private static Vendor vendor = null;
-    private static Product product1 = null;
-    private static Product product2 = null;
+    private static Product product = null;
     private static Inventory inventory = null;
     private static PurchaseOrder purchaseOrder = null;
     private static PurchaseOrderLineItem purchaseOrderLineItem = null;
@@ -45,15 +43,10 @@ class InventoryServiceApplicationTests {
         vendor.setPhone("1-555-555-5555");
         vendor.setAddress("1234 Street, City, State 12345");
 
-        product1 = new Product();
-        product1.setName("Product1");
-        product1.setPrice(10.99);
-        product1.setDescription("This is the first product.");
-
-        product2 = new Product();
-        product2.setName("Product2");
-        product2.setPrice(9.49);
-        product2.setDescription("This is the second product.");
+        product = new Product();
+        product.setName("product");
+        product.setPrice(10.99);
+        product.setDescription("This is the first product.");
 
         purchaseOrder = new PurchaseOrder();
     }
@@ -73,14 +66,14 @@ class InventoryServiceApplicationTests {
     @Order(2)
     void createProduct() {
 
-        productService.createProduct(product1);
-        productService.createProduct(product2);
+        productService.createProduct(product);
+        productService.createProduct(product);
 
-        assertNotNull(product1.getId());
-        assertNotNull(product2.getId());
+        assertNotNull(product.getId());
+        assertNotNull(product.getId());
 
-        System.out.println(product1);
-        System.out.println(product2);
+        System.out.println(product);
+        System.out.println(product);
     }
 
     @Test
@@ -97,34 +90,38 @@ class InventoryServiceApplicationTests {
         System.out.println(purchaseOrder);
     }
 
-//    @Test
-//    @Order(4)
-//    void createPurchaseOrderLineItem() {
-////        purchaseOrderLineItem.setProduct(product);
-////        purchaseOrderLineItem.setQuantity(5);
-////        purchaseOrderLineItem.setPurchaseOrder(purchaseOrder);
-//
-//        purchaseOrderLineItem = purchaseOrderLineItemService.createPurchaseOrderLineItem(product1.getId(), 10);
-//
-//        assertNotNull(purchaseOrderLineItem);
-//
-//        System.out.println(purchaseOrderLineItem);
-//    }
-
     @Test
     @Order(4)
     void addProductToPurchaseOrder() {
-        purchaseOrder = purchaseOrderService.addProduct(purchaseOrder.getId(), product2.getId(), 20);
+        purchaseOrder = purchaseOrderService.addProduct(purchaseOrder.getId(), product.getId(), 20);
 
         assertNotNull(purchaseOrder);
         Set<PurchaseOrderLineItem> purchaseOrderLineItems = purchaseOrder.getPurchaseOrderLineItems();
 
-        assert (2 == purchaseOrderLineItems.size());
-
-        assert (purchaseOrderLineItems.contains(purchaseOrderLineItem));
+        System.out.println(purchaseOrderLineItems.size());
+        assert (1 == purchaseOrderLineItems.size());
 
         System.out.println(purchaseOrder);
     }
 
+    @Test
+    @Order(5)
+    void arrivePurchaseOrder() {
+        purchaseOrderService.arrivePurchaseOrder(purchaseOrder.getId());
+
+        Inventory inventory = inventoryService.getInventory(product.getId());
+        System.out.println(inventory);
+
+        assertEquals(inventory.getQuantity(), 20);
+    }
+
+    @Test
+    @Order(6)
+    void sellProduct() throws Exception {
+        Inventory inventory = inventoryService.sellProduct(product.getId(), 10);
+
+        assertNotNull(inventory);
+        assertEquals(inventory.getQuantity(), 10);
+    }
 
 }

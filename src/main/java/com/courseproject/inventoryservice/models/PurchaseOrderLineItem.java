@@ -7,14 +7,12 @@ import lombok.*;
 import java.util.UUID;
 
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-@ToString
 public class PurchaseOrderLineItem {
     @Id
+    @Getter
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -22,47 +20,16 @@ public class PurchaseOrderLineItem {
     @Version
     private Long version;
 
-    @ManyToOne
+    @Setter
+    @Getter
+    @OneToOne
     @JoinColumn(name = "PRODUCT_ID", nullable = false)
     private Product product;
 
-    private @Min(1) long quantity;
-
-    @ManyToOne()
-    @JoinColumn(name = "PURCHASE_ORDER_ID", nullable = false)
-    private PurchaseOrder purchaseOrder;
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public @Min(1) long getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(@Min(1) long quantity) {
-        this.quantity = quantity;
-    }
-
-    public PurchaseOrder getPurchaseOrder() {
-        return purchaseOrder;
-    }
-
-    public void setPurchaseOrder(PurchaseOrder purchaseOrder) {
-        this.purchaseOrder = purchaseOrder;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
+    @Setter
+    @Getter
+    private @Min(1)
+    long quantity;
 
     @Override
     public String toString() {
@@ -71,7 +38,6 @@ public class PurchaseOrderLineItem {
                 ", version=" + version +
                 ", product=" + product +
                 ", quantity=" + quantity +
-                ", purchaseOrder=" + purchaseOrder +
                 '}';
     }
 }

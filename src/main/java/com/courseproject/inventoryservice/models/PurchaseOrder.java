@@ -15,9 +15,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-@ToString
 public class PurchaseOrder {
     @Id
+    @Getter
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -25,59 +25,19 @@ public class PurchaseOrder {
     @Version
     private Long version;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "VENDOR_ID", nullable = false)
     private Vendor vendor;
 
-    @OneToMany(mappedBy = "purchaseOrder")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<PurchaseOrderLineItem> purchaseOrderLineItems = new HashSet<>();
 
     @NotNull
     private LocalDateTime orderDate;
     private LocalDateTime deliveryDate;
 
-    public LocalDateTime getDeliveryDate() {
-        return deliveryDate;
-    }
-
-    public void setDeliveryDate(LocalDateTime deliveryDate) {
-        this.deliveryDate = deliveryDate;
-    }
-
-    public @NotNull LocalDateTime getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(@NotNull LocalDateTime orderDate) {
-        this.orderDate = orderDate;
-    }
-
-    public Set<PurchaseOrderLineItem> getPurchaseOrderLineItems() {
-        return purchaseOrderLineItems;
-    }
-
-    public void setPurchaseOrderLineItems(Set<PurchaseOrderLineItem> purchaseOrderLineItems) {
-        this.purchaseOrderLineItems = purchaseOrderLineItems;
-    }
-
     public void addPurchaseOrderLineItem(PurchaseOrderLineItem purchaseOrderLineItem) {
         purchaseOrderLineItems.add(purchaseOrderLineItem);
-    }
-
-    public Vendor getVendor() {
-        return vendor;
-    }
-
-    public void setVendor(Vendor vendor) {
-        this.vendor = vendor;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public Long getVersion() {
-        return version;
     }
 
     @Override

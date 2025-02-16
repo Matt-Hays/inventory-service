@@ -19,6 +19,8 @@ public class PurchaseOrderService {
     @Autowired
     PurchaseOrderLineItemRepository purchaseOrderLineItemRepository;
     @Autowired
+    InventoryService inventoryService;
+    @Autowired
     ProductService productService;
 
     public PurchaseOrder createPurchaseOrder(PurchaseOrder purchaseOrder) {
@@ -44,7 +46,6 @@ public class PurchaseOrderService {
 
         PurchaseOrderLineItem purchaseOrderLineItem = new PurchaseOrderLineItem();
         purchaseOrderLineItem.setProduct(product);
-        purchaseOrderLineItem.setPurchaseOrder(purchaseOrder);
         purchaseOrderLineItem.setQuantity(quantity);
 
         purchaseOrder.addPurchaseOrderLineItem(purchaseOrderLineItem);
@@ -53,5 +54,14 @@ public class PurchaseOrderService {
         purchaseOrderRepository.saveAndFlush(purchaseOrder);
 
         return purchaseOrder;
+    }
+
+    public void arrivePurchaseOrder(UUID purchaseOrderId) {
+        PurchaseOrder purchaseOrder = getPurchaseOrderById(purchaseOrderId);
+        if (null == purchaseOrder) {
+            throw new RuntimeException("Purchase order not found");
+        }
+
+        inventoryService.arriveLineItems(purchaseOrder.getPurchaseOrderLineItems());
     }
 }

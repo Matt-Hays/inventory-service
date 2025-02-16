@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -33,7 +35,13 @@ public class Product {
     @Min(0)
     private Double price;
 
-    @NotNull
-    @Min(0)
-    private Double quantity;
+    @OneToMany
+    private Set<PurchaseOrderLineItem> purchaseOrderLineItems = new HashSet<>();
+
+    @Transient
+    public Double getQuantity() {
+        return purchaseOrderLineItems.stream()
+                .mapToDouble(PurchaseOrderLineItem::getQuantity)
+                .sum();
+    }
 }

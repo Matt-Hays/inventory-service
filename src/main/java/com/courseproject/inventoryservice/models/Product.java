@@ -35,13 +35,10 @@ public class Product {
     @Min(0)
     private Double price;
 
+    @NotNull
+    @Min(0)
+    private Double quantity;
+
     @OneToMany
     private Set<PurchaseOrderLineItem> purchaseOrderLineItems = new HashSet<>();
-
-    @Transient
-    public Double getQuantity() {
-        return purchaseOrderLineItems.stream()
-                .mapToDouble(PurchaseOrderLineItem::getQuantity)
-                .sum();
-    }
 }

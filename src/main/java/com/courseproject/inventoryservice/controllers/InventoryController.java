@@ -25,4 +25,13 @@ public class InventoryController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PutMapping("/receive/{id}")
+    public ResponseEntity<?> purchaseOrders(@PathVariable UUID id) {
+        try {
+            return ResponseEntity.ok(inventoryService.receivePurchaseOrder(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

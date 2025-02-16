@@ -37,6 +37,6 @@ public class Vendor {
     @NotBlank
     private String address;
 
-    @OneToMany
+    @OneToMany(mappedBy = "vendor")
     private Set<PurchaseOrder> purchaseOrders = new HashSet<>();
 }

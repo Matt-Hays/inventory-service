@@ -3,7 +3,6 @@ package com.courseproject.inventoryservice.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -16,7 +15,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-@ToString
 public class PurchaseOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -32,6 +30,6 @@ public class PurchaseOrder {
     @ManyToOne
     private Vendor vendor;
 
-    @OneToMany(mappedBy ="purchaseOrder", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy ="purchaseOrder", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<PurchaseOrderLineItem> purchaseOrderLineItems = new HashSet<>();
 }

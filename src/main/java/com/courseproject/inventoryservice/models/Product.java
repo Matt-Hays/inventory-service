@@ -39,6 +39,6 @@ public class Product {
     @Min(0)
     private Double quantity;
 
-    @OneToMany
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     private Set<PurchaseOrderLineItem> purchaseOrderLineItems = new HashSet<>();
 }

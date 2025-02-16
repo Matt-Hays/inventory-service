@@ -35,9 +35,11 @@ public class PurchaseOrderLineItem {
     @Min(0)
     private Double quantity;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "purchase_order_id", referencedColumnName = "id")
     private PurchaseOrder purchaseOrder;
 }

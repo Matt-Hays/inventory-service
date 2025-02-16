@@ -9,6 +9,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -61,6 +62,9 @@ public class PurchaseOrderService {
         if (null == purchaseOrder) {
             throw new RuntimeException("Purchase order not found");
         }
+
+        purchaseOrder.setDeliveryDate(LocalDateTime.now());
+        purchaseOrderRepository.save(purchaseOrder);
 
         inventoryService.arriveLineItems(purchaseOrder.getPurchaseOrderLineItems());
     }

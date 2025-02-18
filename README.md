@@ -21,7 +21,6 @@ product quantities.
 - [Error Handling](#error-handling)
 - [Testing](#testing)
 - [Contributing](#contributing)
-- [License](#license)
 
 ---
 

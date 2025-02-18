@@ -5,7 +5,8 @@ import com.courseproject.inventoryservice.models.PurchaseOrder;
 import com.courseproject.inventoryservice.models.PurchaseOrderLineItem;
 import com.courseproject.inventoryservice.repositories.ProductRepository;
 import com.courseproject.inventoryservice.repositories.PurchaseOrderRepository;
-import com.courseproject.inventoryservice.services.InventoryService;
+import com.courseproject.inventoryservice.services.ProductService;
+import com.courseproject.inventoryservice.services.PurchaseOrderService;
 import jakarta.persistence.OptimisticLockException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 public class InventoryServiceTest {
     @Autowired
-    InventoryService inventoryService;
+    ProductService productService;
 
     @Autowired
     ProductRepository productRepository;
@@ -33,6 +34,9 @@ public class InventoryServiceTest {
     private UUID productId;
     @Autowired
     private PurchaseOrderRepository purchaseOrderRepository;
+
+    @Autowired
+    private PurchaseOrderService purchaseOrderService;
 
     @BeforeEach
     void setUp() {
@@ -58,7 +62,7 @@ public class InventoryServiceTest {
         for (int i = 0; i < THREAD_COUNT; i++) {
             tasks.add(() -> {
                 try {
-                    inventoryService.sellProduct(productId, SELL_QTY);
+                    productService.deductProductQuantity(productId, SELL_QTY);
                     return true;
                 } catch (ObjectOptimisticLockingFailureException | OptimisticLockException e) {
                     return false;
@@ -100,7 +104,7 @@ public class InventoryServiceTest {
         for (int i = 0; i < THREAD_COUNT; i++) {
             tasks.add(() -> {
                 try {
-                    inventoryService.receivePurchaseOrder(purchaseOrderId);
+                    purchaseOrderService.receivePurchaseOrder(purchaseOrderId);
                     return true;
                 } catch (ObjectOptimisticLockingFailureException | OptimisticLockException e) {
                     return false;

@@ -1,8 +1,10 @@
 package com.courseproject.inventoryservice.models;
 
+import com.courseproject.inventoryservice.models.enums.PurchaseOrderStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -23,9 +25,14 @@ public class PurchaseOrder {
     @Version
     private Long version;
 
-    @NotNull
+    @CreationTimestamp
     private LocalDateTime orderDate;
+
     private LocalDateTime deliveryDate;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private PurchaseOrderStatus status = PurchaseOrderStatus.CREATED;
 
     @ManyToOne
     private Vendor vendor;

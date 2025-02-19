@@ -9,7 +9,6 @@ import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -20,7 +19,7 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product getProductById(UUID id) throws EntityNotFoundException {
+    public Product getProductById(Long id) throws EntityNotFoundException {
         return productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
@@ -29,7 +28,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product updateProduct(UUID id, Product product)
+    public Product updateProduct(Long id, Product product)
             throws EntityNotFoundException, OptimisticLockingFailureException {
         Product oldProduct = getProductById(id);
         if (product.getName() != null) oldProduct.setName(product.getName());
@@ -40,7 +39,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product deductProductQuantity(UUID id, Double reductionAmount)
+    public Product deductProductQuantity(Long id, Double reductionAmount)
             throws EntityNotFoundException, IllegalArgumentException, OptimisticLockingFailureException {
         Product oldProduct = getProductById(id);
         Double oldQuantity = oldProduct.getQuantity();
@@ -50,7 +49,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product addProductQuantity(UUID id, Double quantity)
+    public Product addProductQuantity(Long id, Double quantity)
             throws EntityNotFoundException, IllegalArgumentException, OptimisticLockingFailureException {
         if (quantity <= 0) throw new IllegalArgumentException("Quantity cannot be zero or less than zero.");
         Product oldProduct = getProductById(id);
@@ -58,7 +57,7 @@ public class ProductService {
         return productRepository.save(oldProduct);
     }
 
-    public void deleteProduct(UUID id) {
+    public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
 }

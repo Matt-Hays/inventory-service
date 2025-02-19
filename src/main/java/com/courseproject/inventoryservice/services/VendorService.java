@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -18,7 +17,7 @@ public class VendorService {
         return vendorRepository.findAll();
     }
 
-    public Vendor getVendorById(UUID id) throws EntityNotFoundException {
+    public Vendor getVendorById(Long id) throws EntityNotFoundException {
         return vendorRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
@@ -26,7 +25,7 @@ public class VendorService {
         return vendorRepository.save(vendor);
     }
 
-    public Vendor updateVendor(UUID id, Vendor vendor) throws EntityNotFoundException {
+    public Vendor updateVendor(Long id, Vendor vendor) throws EntityNotFoundException {
         Vendor oldVendor = getVendorById(id);
         if (vendor.getName() != null) oldVendor.setName(vendor.getName());
         if (vendor.getAddress() != null) oldVendor.setAddress(vendor.getAddress());
@@ -35,7 +34,7 @@ public class VendorService {
         return vendorRepository.save(oldVendor);
     }
 
-    public void deleteVendor(UUID id) {
+    public void deleteVendor(Long id) {
         vendorRepository.deleteById(id);
     }
 }

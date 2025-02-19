@@ -18,7 +18,6 @@ import org.springframework.test.annotation.Rollback;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,7 +30,7 @@ public class InventoryServiceTest {
     @Autowired
     ProductRepository productRepository;
 
-    private UUID productId;
+    private Long productId;
     @Autowired
     private PurchaseOrderRepository purchaseOrderRepository;
 
@@ -95,7 +94,7 @@ public class InventoryServiceTest {
     @Test
     @Rollback
     void testOptimisticLockingOnConcurrentReceivePurchaseOrder() throws Exception {
-        UUID purchaseOrderId = createDemoPurchaseOrder(productId, 20.0);
+        Long purchaseOrderId = createDemoPurchaseOrder(productId, 20.0);
 
         final int THREAD_COUNT = 5;
         ExecutorService executor = Executors.newFixedThreadPool(THREAD_COUNT);
@@ -133,7 +132,7 @@ public class InventoryServiceTest {
     }
 
 
-    private UUID createDemoPurchaseOrder(UUID productId, double qty) {
+    private Long createDemoPurchaseOrder(Long productId, double qty) {
         PurchaseOrder purchaseOrder = new PurchaseOrder();
         purchaseOrder.setOrderDate(LocalDateTime.now());
 

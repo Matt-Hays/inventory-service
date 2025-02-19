@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
@@ -24,7 +23,7 @@ public class VendorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Vendor> getVendorById(@PathVariable UUID id) {
+    public ResponseEntity<Vendor> getVendorById(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(vendorService.getVendorById(id));
         } catch (EntityNotFoundException e) {
@@ -40,7 +39,7 @@ public class VendorController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Vendor> updateVendor(@PathVariable UUID id, @RequestBody @Valid Vendor vendor) {
+    public ResponseEntity<Vendor> updateVendor(@PathVariable Long id, @RequestBody @Valid Vendor vendor) {
         try {
             return ResponseEntity.ok(vendorService.updateVendor(id, vendor));
         } catch (EntityNotFoundException e) {
@@ -53,7 +52,7 @@ public class VendorController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteVendor(@PathVariable UUID id) {
+    public void deleteVendor(@PathVariable Long id) {
         vendorService.deleteVendor(id);
     }
 }

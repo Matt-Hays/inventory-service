@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 // TODO: Add @ControllerAdvice for error handling.
 @RestController
@@ -26,7 +25,7 @@ public class PurchaseOrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PurchaseOrder> getPurchaseOrderById(@PathVariable UUID id) {
+    public ResponseEntity<PurchaseOrder> getPurchaseOrderById(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(purchaseOrderService.findPurchaseOrderById(id));
         } catch (Exception e) {
@@ -40,7 +39,7 @@ public class PurchaseOrderController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<PurchaseOrder> updatePurchaseOrder(@PathVariable UUID id, @RequestBody @Valid PurchaseOrder purchaseOrder) {
+    public ResponseEntity<PurchaseOrder> updatePurchaseOrder(@PathVariable Long id, @RequestBody @Valid PurchaseOrder purchaseOrder) {
         try {
             return ResponseEntity.ok(purchaseOrderService.updatePurchaseOrder(id, purchaseOrder));
         } catch (OptimisticLockingFailureException e) {
@@ -51,7 +50,7 @@ public class PurchaseOrderController {
     }
 
     @PatchMapping("/{id}/receive")
-    public ResponseEntity<PurchaseOrder> receivePurchaseOrder(@PathVariable UUID id) {
+    public ResponseEntity<PurchaseOrder> receivePurchaseOrder(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(purchaseOrderService.receivePurchaseOrder(id));
         } catch (OptimisticLockingFailureException e) {
@@ -66,7 +65,7 @@ public class PurchaseOrderController {
     }
 
     @PostMapping("/{id}/lineItems")
-    public ResponseEntity<?> addLineItem(@PathVariable UUID id, @RequestBody @Valid List<PurchaseOrderLineItem> purchaseOrderLineItems) {
+    public ResponseEntity<?> addLineItem(@PathVariable Long id, @RequestBody @Valid List<PurchaseOrderLineItem> purchaseOrderLineItems) {
         try {
             return ResponseEntity.ok(purchaseOrderService.addLineItemToPurchaseOrder(id, purchaseOrderLineItems));
         } catch (OptimisticLockingFailureException e) {
@@ -81,7 +80,7 @@ public class PurchaseOrderController {
     }
 
     @DeleteMapping("/{id}")
-    public void deletePurchaseOrder(@PathVariable UUID id) {
+    public void deletePurchaseOrder(@PathVariable Long id) {
         purchaseOrderService.deletePurchaseOrder(id);
     }
 }

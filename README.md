@@ -20,7 +20,6 @@ product quantities.
 - [Running the Service](#running-the-service)
 - [Error Handling](#error-handling)
 - [Testing](#testing)
-- [Contributing](#contributing)
 
 ---
 

@@ -35,7 +35,7 @@ public class ProductController {
         return productService.saveProduct(product);
     }
 
-    @PatchMapping("/{id}")
+    @PostMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody @Valid Product product) {
         try {
             return ResponseEntity.ok(productService.updateProduct(id, product));
@@ -46,7 +46,7 @@ public class ProductController {
         }
     }
 
-    @PatchMapping("/{id}/add/{qty}")
+    @PostMapping("/{id}/add/{qty}")
     public ResponseEntity<Product> addQuantityToProduct(@PathVariable Long id, @PathVariable Double qty) {
         try {
             return ResponseEntity.ok(productService.addProductQuantity(id, qty));
@@ -59,7 +59,7 @@ public class ProductController {
         }
     }
 
-    @PatchMapping("/{id}/deduct/{qty}")
+    @PostMapping("/{id}/deduct/{qty}")
     public ResponseEntity<Product> deductQuantityFromProduct(@PathVariable Long id, @PathVariable Double qty) {
         try {
             return ResponseEntity.ok(productService.deductProductQuantity(id, qty));
@@ -72,7 +72,7 @@ public class ProductController {
         }
     }
 
-    @PatchMapping("/{id}/sale/{qty}")
+    @PostMapping("/{id}/sale/{qty}")
     public ResponseEntity<Product> saleProduct(@PathVariable Long id, @PathVariable Double qty) {
         try {
             return ResponseEntity.ok(productService.deductProductQuantity(id, qty));

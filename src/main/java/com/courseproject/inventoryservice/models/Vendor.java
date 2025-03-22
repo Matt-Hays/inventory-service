@@ -40,5 +40,6 @@ public class Vendor {
 
     @OneToMany(mappedBy = "vendor")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @ToString.Exclude
     private Set<PurchaseOrder> purchaseOrders = new HashSet<>();
 }

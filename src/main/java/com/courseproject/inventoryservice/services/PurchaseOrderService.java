@@ -4,14 +4,18 @@ import com.courseproject.inventoryservice.models.Product;
 import com.courseproject.inventoryservice.models.PurchaseOrder;
 import com.courseproject.inventoryservice.models.PurchaseOrderLineItem;
 import com.courseproject.inventoryservice.models.Vendor;
+import com.courseproject.inventoryservice.models.dto.PointOfSaleProductDTO;
 import com.courseproject.inventoryservice.models.enums.PurchaseOrderStatus;
 import com.courseproject.inventoryservice.repositories.PurchaseOrderLineItemRepository;
 import com.courseproject.inventoryservice.repositories.PurchaseOrderRepository;
+import com.courseproject.inventoryservice.services.utils.PointOfSaleFeignClient;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +28,7 @@ public class PurchaseOrderService {
     private final PurchaseOrderLineItemRepository purchaseOrderLineItemRepository;
     private final ProductService productService;
     private final VendorService vendorService;
+    private final PointOfSaleFeignClient pointOfSaleFeignClient;
 
     public List<PurchaseOrder> findAllPurchaseOrders() {
         return purchaseOrderRepository.findAll();
@@ -50,8 +55,7 @@ public class PurchaseOrderService {
         purchaseOrderRepository.deleteById(id);
     }
 
-    @Transactional
-    public PurchaseOrder receivePurchaseOrder(Long id)
+    public PurchaseOrder receivePurchaseOrder(String token, Long id)
             throws EntityNotFoundException, OptimisticLockingFailureException, IllegalArgumentException {
         PurchaseOrder purchaseOrder = findPurchaseOrderById(id);
         if (purchaseOrder.getPurchaseOrderLineItems().isEmpty()) return null;
@@ -65,7 +69,20 @@ public class PurchaseOrderService {
             Double newQty = product.getQuantity() + lineItemQty;
             product.setQuantity(newQty);
 
-            productService.saveProduct(product);
+            Product savedProduct = productService.saveProduct(product);
+            try {
+            ResponseEntity<Product> response = pointOfSaleFeignClient.createProduct(token, new PointOfSaleProductDTO(
+                    savedProduct.getId(),
+                    savedProduct.getName(),
+                    savedProduct.getDescription(),
+                    savedProduct.getPrice()
+            ));
+                if (!response.getStatusCode().is2xxSuccessful()) {
+                    throw new RuntimeException("Failed to save product " + savedProduct.getId());
+                }
+            } catch (RestClientException e) {
+                throw new RuntimeException("Error calling inventory service.", e);
+            }
         }
         purchaseOrder.setStatus(PurchaseOrderStatus.RECEIVED);
         return purchaseOrderRepository.save(purchaseOrder);

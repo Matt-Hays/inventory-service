@@ -41,5 +41,6 @@ public class PurchaseOrder {
 
     @OneToMany(mappedBy ="purchaseOrder", cascade = CascadeType.ALL)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @ToString.Exclude
     private Set<PurchaseOrderLineItem> purchaseOrderLineItems = new HashSet<>();
 }

@@ -50,33 +50,13 @@ public class PurchaseOrderController {
     }
 
     @PatchMapping("/{id}/receive")
-    public ResponseEntity<PurchaseOrder> receivePurchaseOrder(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(purchaseOrderService.receivePurchaseOrder(id));
-        } catch (OptimisticLockingFailureException e) {
-            return ResponseEntity.unprocessableEntity().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
+    public ResponseEntity<PurchaseOrder> receivePurchaseOrder(@RequestHeader("Authorization") String token, @PathVariable Long id) {
+        return ResponseEntity.ok(purchaseOrderService.receivePurchaseOrder(token, id));
     }
 
     @PostMapping("/{id}/lineItems")
     public ResponseEntity<?> addLineItem(@PathVariable Long id, @RequestBody @Valid List<PurchaseOrderLineItem> purchaseOrderLineItems) {
-        try {
-            return ResponseEntity.ok(purchaseOrderService.addLineItemToPurchaseOrder(id, purchaseOrderLineItems));
-        } catch (OptimisticLockingFailureException e) {
-            return ResponseEntity.unprocessableEntity().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
+        return ResponseEntity.ok(purchaseOrderService.addLineItemToPurchaseOrder(id, purchaseOrderLineItems));
     }
 
     @DeleteMapping("/{id}")

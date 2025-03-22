@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -85,6 +86,7 @@ public class PurchaseOrderService {
             }
         }
         purchaseOrder.setStatus(PurchaseOrderStatus.RECEIVED);
+        purchaseOrder.setDeliveryDate(LocalDateTime.now());
         return purchaseOrderRepository.save(purchaseOrder);
     }
 

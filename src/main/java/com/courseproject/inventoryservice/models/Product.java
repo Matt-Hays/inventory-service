@@ -29,7 +29,6 @@ public class Product {
     @NotBlank
     private String name;
 
-    @NotBlank
     private String description;
 
     @NotNull
@@ -42,5 +41,6 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @ToString.Exclude
     private Set<PurchaseOrderLineItem> purchaseOrderLineItems = new HashSet<>();
 }

@@ -8,6 +8,10 @@ import com.courseproject.inventoryservice.models.dto.PointOfSaleProductDTO;
 import com.courseproject.inventoryservice.models.enums.PurchaseOrderStatus;
 import com.courseproject.inventoryservice.repositories.PurchaseOrderRepository;
 import com.courseproject.inventoryservice.services.utils.PointOfSaleFeignClient;
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -55,6 +59,10 @@ public class PurchaseOrderService {
         purchaseOrderRepository.deleteById(id);
     }
 
+    @Retry(name = "PurchaseOrderService:receivePurchaseOrder-retry")
+    @RateLimiter(name = "PurchaseOrderService:receivePurchaseOrder-ratelimiter")
+    @Bulkhead(name = "PurchaseOrderService:receivePurchaseOrder-bulkhead")
+    @CircuitBreaker(name = "PurchaseOrderService:receivePurchaseOrder-circuitbreaker")
     public PurchaseOrder receivePurchaseOrder(String token, Long id)
             throws EntityNotFoundException, OptimisticLockingFailureException, IllegalArgumentException {
         PurchaseOrder purchaseOrder = findPurchaseOrderById(id);

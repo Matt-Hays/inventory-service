@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
 
+    @PreAuthorize("hasAnyRole('INVENTORY_MANAGER', 'INVENTORY_WORKER')")
     @GetMapping
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
@@ -30,11 +32,13 @@ public class ProductController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('INVENTORY_MANAGER', 'INVENTORY_WORKER')")
     @PostMapping
     public Product createProduct(@RequestBody @Valid Product product) {
         return productService.saveProduct(product);
     }
 
+    @PreAuthorize("hasAnyRole('INVENTORY_MANAGER', 'INVENTORY_WORKER')")
     @PostMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody @Valid Product product) {
         try {
@@ -72,6 +76,7 @@ public class ProductController {
         }
     }
 
+
     @PostMapping("/{id}/sale/{qty}")
     public ResponseEntity<Product> saleProduct(@PathVariable Long id, @PathVariable Double qty) {
         try {
@@ -85,6 +90,7 @@ public class ProductController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('INVENTORY_MANAGER', 'INVENTORY_WORKER')")
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);

@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,11 +20,13 @@ import java.util.List;
 public class PurchaseOrderController {
     private final PurchaseOrderService purchaseOrderService;
 
+    @PreAuthorize("hasAnyRole('INVENTORY_MANAGER', 'INVENTORY_WORKER')")
     @GetMapping
     public List<PurchaseOrder> getAllPurchaseOrders() {
         return purchaseOrderService.findAllPurchaseOrders();
     }
 
+    @PreAuthorize("hasAnyRole('INVENTORY_MANAGER', 'INVENTORY_WORKER')")
     @GetMapping("/{id}")
     public ResponseEntity<PurchaseOrder> getPurchaseOrderById(@PathVariable Long id) {
         try {
@@ -33,11 +36,13 @@ public class PurchaseOrderController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('INVENTORY_MANAGER', 'INVENTORY_WORKER')")
     @PostMapping
     public PurchaseOrder createPurchaseOrder(@RequestBody @Valid PurchaseOrder purchaseOrder) {
         return purchaseOrderService.savePurchaseOrder(purchaseOrder);
     }
 
+    @PreAuthorize("hasAnyRole('INVENTORY_MANAGER', 'INVENTORY_WORKER')")
     @PatchMapping("/{id}")
     public ResponseEntity<PurchaseOrder> updatePurchaseOrder(@PathVariable Long id, @RequestBody @Valid PurchaseOrder purchaseOrder) {
         try {
@@ -49,11 +54,13 @@ public class PurchaseOrderController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('INVENTORY_MANAGER', 'INVENTORY_WORKER')")
     @PatchMapping("/{id}/receive")
     public ResponseEntity<PurchaseOrder> receivePurchaseOrder(@RequestHeader("Authorization") String token, @PathVariable Long id) {
         return ResponseEntity.ok(purchaseOrderService.receivePurchaseOrder(token, id));
     }
 
+    @PreAuthorize("hasAnyRole('INVENTORY_MANAGER', 'INVENTORY_WORKER')")
     @PostMapping("/{id}/lineItems")
     public ResponseEntity<?> addLineItem(@PathVariable Long id, @RequestBody @Valid List<PurchaseOrderLineItem> purchaseOrderLineItems) {
         return ResponseEntity.ok(purchaseOrderService.addLineItemToPurchaseOrder(id, purchaseOrderLineItems));

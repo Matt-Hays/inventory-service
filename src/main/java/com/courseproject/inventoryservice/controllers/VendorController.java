@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,11 +18,13 @@ import java.util.List;
 public class VendorController {
     private final VendorService vendorService;
 
+    @PreAuthorize("hasAnyRole('INVENTORY_MANAGER', 'INVENTORY_WORKER')")
     @GetMapping
     public List<Vendor> getAllVendors() {
         return vendorService.getAllVendors();
     }
 
+    @PreAuthorize("hasAnyRole('INVENTORY_MANAGER', 'INVENTORY_WORKER')")
     @GetMapping("/{id}")
     public ResponseEntity<Vendor> getVendorById(@PathVariable Long id) {
         try {
@@ -33,11 +36,13 @@ public class VendorController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('INVENTORY_MANAGER', 'INVENTORY_WORKER')")
     @PostMapping
     public Vendor createVendor(@RequestBody @Valid Vendor vendor) {
         return vendorService.createVendor(vendor);
     }
 
+    @PreAuthorize("hasAnyRole('INVENTORY_MANAGER', 'INVENTORY_WORKER')")
     @PatchMapping("/{id}")
     public ResponseEntity<Vendor> updateVendor(@PathVariable Long id, @RequestBody @Valid Vendor vendor) {
         try {
@@ -51,6 +56,7 @@ public class VendorController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('INVENTORY_MANAGER', 'INVENTORY_WORKER')")
     @DeleteMapping("/{id}")
     public void deleteVendor(@PathVariable Long id) {
         vendorService.deleteVendor(id);

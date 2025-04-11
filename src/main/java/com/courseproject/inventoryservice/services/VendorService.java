@@ -25,10 +25,10 @@ public class VendorService {
         return vendorRepository.findAll();
     }
 
-    @Observed(name = "get.vendor",
-            contextualName = "getting-vendor",
-            lowCardinalityKeyValues = {"vendor"}
-    )
+    @Observed(name = "get.vendor", contextualName = "getting-vendor", lowCardinalityKeyValues = {
+            "operation",
+            "fetchVendor"
+    })
     public Vendor getVendorById(Long id) throws EntityNotFoundException {
         ScopedSpan span = tracer.startScopedSpan("getVendorById");
         try {
@@ -38,7 +38,8 @@ public class VendorService {
                 v = vendorRepository.findById(id).orElseThrow(EntityNotFoundException::new);
                 redisTemplate.opsForValue().set(id, v);
                 log.info("Vendor with id {} was added to Redis", id);
-            } else log.info("Vendor with id {} was found in Redis", id);
+            } else
+                log.info("Vendor with id {} was found in Redis", id);
             return v;
         } catch (Exception e) {
             throw new EntityNotFoundException(String.format("Vendor with id %s not found", id), e);
@@ -55,10 +56,14 @@ public class VendorService {
 
     public Vendor updateVendor(Long id, Vendor vendor) throws EntityNotFoundException {
         Vendor oldVendor = getVendorById(id);
-        if (vendor.getName() != null) oldVendor.setName(vendor.getName());
-        if (vendor.getAddress() != null) oldVendor.setAddress(vendor.getAddress());
-        if (vendor.getEmail() != null) oldVendor.setEmail(vendor.getEmail());
-        if (vendor.getPhone() != null) oldVendor.setPhone(vendor.getPhone());
+        if (vendor.getName() != null)
+            oldVendor.setName(vendor.getName());
+        if (vendor.getAddress() != null)
+            oldVendor.setAddress(vendor.getAddress());
+        if (vendor.getEmail() != null)
+            oldVendor.setEmail(vendor.getEmail());
+        if (vendor.getPhone() != null)
+            oldVendor.setPhone(vendor.getPhone());
         return vendorRepository.save(oldVendor);
     }
 

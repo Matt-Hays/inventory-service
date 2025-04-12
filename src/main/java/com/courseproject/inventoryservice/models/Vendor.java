@@ -11,8 +11,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.data.redis.core.RedisHash;
-
 @Entity
 @Getter
 @Setter
@@ -20,7 +18,6 @@ import org.springframework.data.redis.core.RedisHash;
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = "purchaseOrders")
 @ToString
-@RedisHash("vendor")
 public class Vendor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

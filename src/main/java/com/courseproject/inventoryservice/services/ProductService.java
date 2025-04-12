@@ -6,28 +6,40 @@ import com.courseproject.inventoryservice.repositories.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ProductService {
     private final ProductRepository productRepository;
 
     @Autowired
     SimpleSourceBean simpleSourceBean;
 
+    private final RedisTemplate<Long, Product> redisTemplate;
+
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
     public Product getProductById(Long id) throws EntityNotFoundException {
+        Product product = redisTemplate.opsForValue().get(id);
+        if (product == null) {
+            log.info("Product " + id + " not found in Redis");
+            product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+            redisTemplate.opsForValue().set(id, product);
+        }
+
         simpleSourceBean.publishProductChange("GET", id);
-        return productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return product;
     }
 
     public Product saveProduct(Product product) {

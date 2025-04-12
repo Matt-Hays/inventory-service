@@ -11,13 +11,16 @@ import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.data.redis.core.RedisHash;
+
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"purchaseOrderLineItems"})
+@EqualsAndHashCode(exclude = { "purchaseOrderLineItems" })
 @ToString
+@RedisHash("product")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

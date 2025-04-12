@@ -39,7 +39,7 @@ public class Vendor implements Serializable {
     @NotBlank
     private String address;
 
-    @OneToMany(mappedBy = "vendor")
+    @OneToMany(mappedBy = "vendor", fetch = FetchType.EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @ToString.Exclude
     private Set<PurchaseOrder> purchaseOrders = new HashSet<>();
